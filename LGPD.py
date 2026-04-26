@@ -34,7 +34,30 @@ metadata.create_all(engine)
 
 @medir_tempo
 def LGPD(row):
-    return row
+    """
+    Atividade 1: Ajuste para anonimizar campos sensíveis 
+    """
+    dados = list(row)
+
+    nome_original = dados[1]
+    partes_nome = nome_original.split(' ')
+    primeiro_nome = partes_nome[0]
+    anonimo = primeiro_nome[0] + ('*' * (len(primeiro_nome) - 1))
+    if len(partes_nome) > 1:
+        dados[1] = anonimo + " " + " ".join(partes_nome[1:])
+    else:
+        dados[1] = anonimo
+
+    dados[2] = f"{dados[2][:4]}*** ***-**"
+
+    email = dados[3]
+    prefixo, dominio = email.split('@')
+    dados[3] = f"{prefixo[0]}{'*' * (len(prefixo) - 1)}@{dominio}"
+
+    telefone = dados[4]
+    dados[4] = telefone[-4:]
+
+    return tuple(dados)
 
 users = []
 with engine.connect() as conn:
