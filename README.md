@@ -10,8 +10,8 @@ Este projeto faz parte da disciplina de Linguagem de Programação 2 da FATEC Ri
 ## Atividades Desenvolvidas
 - [x] **Atividade 1:** Anonimização de dados sensíveis (Nome, CPF, E-mail e Telefone) utilizando máscaras de caracteres.
 - [x] **Atividade 2:** Exportação de registros anonimizados em arquivos CSV/XLS por ano de nascimento.
-- [ ] **Atividade 3:** Exportação geral de dados (Nome e CPF) sem anonimização.
-- [ ] **Atividade 4:** Mensuração de tempo de execução e logs.
+- [x] **Atividade 3:** Exportação geral de dados (Nome e CPF) sem anonimização.
+- [x] **Atividade 4:** Mensuração de tempo de execução e logs.
 
 ## Como executar o projeto
 1. Instale as dependências:
@@ -21,3 +21,9 @@ Este projeto faz parte da disciplina de Linguagem de Programação 2 da FATEC Ri
 2. Execute o script principal:
    ```bash
    python LGPD.py
+
+### Arquivos Gerados
+Após a execução do script, o sistema gera os seguintes arquivos:
+- `[Ano].csv`: Dados dos usuários agrupados por ano de nascimento (com anonimização LGPD).
+- `todos.csv`: Relatório administrativo contendo apenas Nome e CPF (dados originais).
+- `execucao.log`: Registro técnico com o tempo de execução de cada atividade.
