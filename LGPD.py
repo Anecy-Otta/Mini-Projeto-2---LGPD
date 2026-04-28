@@ -85,6 +85,22 @@ def exportar_por_ano(lista_usuarios):
             
     print(f" Gerados {len(dados_por_ano)} ficheiros CSV.")
 
+@medir_tempo
+def exportar_geral_original(engine):
+    """
+    Atividade 3: Gera um relatório com Nome e CPF originais (sem anonimização).
+    """
+    with engine.connect() as conn:
+        print("Gerando relatório geral (Nome/CPF)...")
+        result = conn.execute(text("SELECT nome, cpf FROM usuarios;"))
+        
+        with open('todos.csv', 'w', newline='', encoding='utf-8') as f:
+            escritor = csv.writer(f)
+            escritor.writerow(['nome', 'cpf'])
+            escritor.writerows(result)
+            
+    print("Atividade 3 concluída: Arquivo 'todos.csv' gerado.")
+
 users_anonimos = []
 
 with engine.connect() as conn:
@@ -100,3 +116,5 @@ for user in users_anonimos[:5]:
     print(user)
 
 exportar_por_ano(users_anonimos)
+
+exportar_geral_original(engine)
