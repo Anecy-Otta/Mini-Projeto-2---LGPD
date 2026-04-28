@@ -1,3 +1,5 @@
+import csv
+import os
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Date, DateTime, insert, text
 from datetime import datetime
 
@@ -59,12 +61,42 @@ def LGPD(row):
 
     return tuple(dados)
 
-users = []
-with engine.connect() as conn:
-    result = conn.execute(text("SELECT * FROM usuarios LIMIT 5;"))
-    for row in result:
-        row = LGPD(row)
-        users.append(row)
+@medir_tempo
+def exportar_por_ano(lista_usuarios):
+    """
+    Atividade 2: Agrupa usuários por ano e gera ficheiros CSV individuais.
+    """
+    dados_por_ano = {}
 
-for user in users:
+    for user in lista_usuarios:
+        ano_nascimento = user[5].year
+        
+        if ano_nascimento not in dados_por_ano:
+            dados_por_ano[ano_nascimento] = []
+        
+        dados_por_ano[ano_nascimento].append(user)
+
+    for ano, registros in dados_por_ano.items():
+        nome_arquivo = f"{ano}.csv"
+        with open(nome_arquivo, 'w', newline='', encoding='utf-8') as f:
+            escritor = csv.writer(f)
+            escritor.writerow(['id', 'nome', 'cpf', 'email', 'telefone', 'data_nascimento', 'created_on', 'updated_on'])
+            escritor.writerows(registros)
+            
+    print(f" Gerados {len(dados_por_ano)} ficheiros CSV.")
+
+users_anonimos = []
+
+with engine.connect() as conn:
+    print("A procurar dados no banco...")
+    result = conn.execute(text("SELECT * FROM usuarios;"))
+    
+    for row in result:
+        row_protegida = LGPD(row)
+        users_anonimos.append(row_protegida)
+
+print("\n--- Amostra dos dados anonimizados ---")
+for user in users_anonimos[:5]:
     print(user)
+
+exportar_por_ano(users_anonimos)
