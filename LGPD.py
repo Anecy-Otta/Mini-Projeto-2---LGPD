@@ -1,19 +1,34 @@
 import csv
 import os
+import logging 
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Date, DateTime, insert, text
 from datetime import datetime
-
 import time
 from functools import wraps
+
+logging.basicConfig(
+    filename='execucao.log', 
+    level=logging.INFO,
+    format='%(asctime)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    force=True 
+)
+
+logging.info("--- Início da execução do script ---")
+
 def medir_tempo(func):
-    """Decorator que mede o tempo de execução de uma função."""
+    """Decorator que mede o tempo e grava no log."""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        inicio = time.perf_counter()  # tempo inicial (mais preciso que time.time)
+        inicio = time.perf_counter()
         resultado = func(*args, **kwargs)
-        fim = time.perf_counter()     # tempo final
+        fim = time.perf_counter()
         duracao = fim - inicio
-        print(f"⏱ Função '{func.__name__}' executada em {duracao:.6f} segundos.")
+        
+        mensagem = f"Função '{func.__name__}' executada em {duracao:.6f} segundos."
+        print(f"{mensagem}")
+        logging.info(mensagem)
+        
         return resultado
     return wrapper
 
